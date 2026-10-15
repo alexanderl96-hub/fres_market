@@ -348,7 +348,8 @@ export default function App() {
   }
 
   if (screen === 'account' && user) {
-    return <Account onLogout={logout} />;
+    return <Account onLogout={logout} 
+                    onBack={() => navigate('home', '/')} />;
   }
 
   if (user) {
@@ -374,28 +375,3 @@ export default function App() {
     />
   );
 }
-
-// export default function App() {
-//   const [user, setUser] = useState(null);
-//   const [checkingSession, setCheckingSession] = useState(true);
-
-//   useEffect(() => {
-//     const token = localStorage.getItem('food_store_token');
-//     if (!token) {
-//       setCheckingSession(false);
-//       return;
-//     }
-//     api.me()
-//       .then(result => setUser(result.user))
-//       .catch(() => localStorage.removeItem('food_store_token'))
-//       .finally(() => setCheckingSession(false));
-//   }, []);
-
-//   function logout() {
-//     localStorage.removeItem('food_store_token');
-//     setUser(null);
-//   }
-
-//   if (checkingSession) return <div className="boot-screen"><span className="boot-mark"><Sprout size={28} /></span><p>Making room for good things…</p></div>;
-//   return user ? <Store user={user} onLogout={logout} /> : <AuthScreen onAuth={setUser} />;
-// }

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from './services/api';
 
-export default function Account({ onLogout }) {
+export default function Account({ onLogout , onBack}) {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -32,9 +32,9 @@ const [recoveryError, setRecoveryError] = useState('');
     }
 
     function handleLogout() {
-  localStorage.removeItem('food_store_token');
-  onLogout();
-}
+      localStorage.removeItem('food_store_token');
+      onLogout();
+    }
 
   useEffect(() => {
     let active = true;
@@ -42,6 +42,7 @@ const [recoveryError, setRecoveryError] = useState('');
     apiRequest('/api/auth/me')
       .then(data => {
         if (active) setUser(data.user);
+        console.log("user", data.user)
       })
       .catch(err => {
         if (active) setError(err.message);
@@ -89,6 +90,8 @@ const [recoveryError, setRecoveryError] = useState('');
 
   if (!user) return <p>Loading your account...</p>;
 
+   console.log("user", user)
+
   return (
     <main className="account-page">
       <h1>My Account</h1>
@@ -99,11 +102,14 @@ const [recoveryError, setRecoveryError] = useState('');
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>Account ID:</strong> {user.id}</p>
         <p>
-          <strong>Member since:</strong>{' '}
-          {user.createdAt
-            ? new Date(user.createdAt).toLocaleDateString()
+          <strong>Member since:</strong> {user.created}
+          {user.created_at
+            ?  new Date(user.created_at).toLocaleDateString()
             : 'Not available'}
         </p>
+        <button type="button"  onClick={handleLogout}>
+            Sign out
+         </button>
       </section>
 
       <section className="account-card">
@@ -141,11 +147,6 @@ const [recoveryError, setRecoveryError] = useState('');
         {error && <p role="alert">{error}</p>}
       </section>
 
-      <button type="button"  onClick={handleLogout}>
-        Sign out
-      </button>
-
-
         <section className="account-card">
         <h2>Email recovery</h2>
         <p>
@@ -170,7 +171,12 @@ const [recoveryError, setRecoveryError] = useState('');
 
         {recoveryMessage && <p role="status">{recoveryMessage}</p>}
         {recoveryError && <p role="alert">{recoveryError}</p>}
+        
         </section>
+
+      <button type="button" onClick={onBack}>
+        Back to login
+      </button>
     </main>
   );
 }

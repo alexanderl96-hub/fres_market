@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { apiRequest } from './services/api';
 
 export default function AccountRecovery({ onBack, initialMode = 'password' }) {
@@ -22,7 +22,7 @@ export default function AccountRecovery({ onBack, initialMode = 'password' }) {
       const data = await apiRequest(
         isPassword
           ? '/api/auth/forgot-password'
-          : '/api/auth/recover-email',
+          : '/api/auth/recover-account-email',
         {
           method: 'POST',
           body: JSON.stringify(
@@ -119,8 +119,8 @@ export default function AccountRecovery({ onBack, initialMode = 'password' }) {
         </button>
       </form>
 
-      {message && <p role="status">{message}</p>}
       {error && <p role="alert">{error}</p>}
+      <p role="status">{message}</p>
 
       <button type="button" onClick={onBack}>
         Back to login
